@@ -23,13 +23,13 @@ GuideLLM evaluates and optimizes LLM deployments by simulating real-world infere
 
 ```bash
 # Apply the PVC
-kubectl apply -f pvc.yaml
+kubectl apply -f utils/jobs/pvc.yaml
 
 # Apply the ConfigMap (optional)
-kubectl apply -f config.yaml
+kubectl apply -f pipeline/config.yaml
 
 # Run the job with default settings
-kubectl apply -f guidellm-job.yaml
+kubectl apply -f utils/jobs/guidellm-job.yaml
 
 # Or customize environment variables
 kubectl set env job/run-guidellm TARGET=http://my-endpoint:8000/v1
@@ -40,8 +40,8 @@ kubectl set env job/run-guidellm MODEL_NAME=my-model
 
 ```bash
 # Apply the task and pipeline
-kubectl apply -f tekton-task.yaml
-kubectl apply -f tekton-pipeline.yaml
+kubectl apply -f pipeline/tekton-task.yaml
+kubectl apply -f pipeline/tekton-pipeline.yaml
 
 # Run with parameters
 tkn pipeline start guidellm-benchmark-pipeline \
@@ -51,6 +51,8 @@ tkn pipeline start guidellm-benchmark-pipeline \
   --param data-config='{"type":"emulated","prompt_tokens":512,"output_tokens":128}' \
   --workspace name=shared-workspace,claimName=guidellm-output-pvc
 ```
+
+(if you need to install the `tkn` executable, on a Mac, you will want to run `brew install tektoncd-cli`)
 
 Once the Tekton pipeline starts, the GuideLLM benchmark CLI will be triggered with the input parameters:
 
